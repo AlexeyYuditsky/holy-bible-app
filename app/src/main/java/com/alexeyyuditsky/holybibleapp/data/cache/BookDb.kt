@@ -5,14 +5,14 @@ import com.alexeyyuditsky.holybibleapp.core.Book
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
-open class BookDb : RealmObject(), Abstract.Mapable<Book, BookCacheMapper> {
+open class BookDb : RealmObject(), Abstract.Object<Book, BookCacheMapper> {
 
     @PrimaryKey
     var id: Int = -1
     var name: String = ""
 
     override fun map(mapper: BookCacheMapper): Book {
-        return Book(id, name)
+        return mapper.map(id, name)
     }
 
 }

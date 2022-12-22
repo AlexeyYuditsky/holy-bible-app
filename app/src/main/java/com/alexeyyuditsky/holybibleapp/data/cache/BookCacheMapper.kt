@@ -5,11 +5,11 @@ import com.alexeyyuditsky.holybibleapp.core.Book
 
 interface BookCacheMapper : Abstract.Mapper {
 
-    fun map(bookDb: BookDb): Book
+    fun map(id: Int, name: String): Book
 
     class Base : BookCacheMapper {
-        override fun map(bookDb: BookDb): Book {
-            return Book(bookDb.id, bookDb.name)
+        override fun map(id: Int, name: String): Book {
+            return Book(id, name)
         }
     }
 

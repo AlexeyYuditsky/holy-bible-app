@@ -8,7 +8,7 @@ class AbstractTest {
 
     @Test
     fun test_success() {
-        val dataObject = TestDataObject.Success("a", "b")
+        val dataObject = DataObject.Success("a", "b")
         val domainObject = dataObject.map(DataToDomainMapper.Base())
         val uiObject = domainObject.map(DomainToUiMapper.Base())
         assertTrue(uiObject is UiObject.Success)
@@ -16,18 +16,18 @@ class AbstractTest {
 
     @Test
     fun test_fail() {
-        val dataObject = TestDataObject.Fail(IOException())
+        val dataObject = DataObject.Fail(IOException())
         val domainObject = dataObject.map(DataToDomainMapper.Base())
         val uiObject = domainObject.map(DomainToUiMapper.Base())
         assertTrue(uiObject is UiObject.Fail)
     }
 
-    private sealed class TestDataObject : Abstract.Object<DomainObject, DataToDomainMapper>() {
+    private sealed class DataObject : Abstract.Object<DomainObject, DataToDomainMapper> {
 
         class Success(
             private val textOne: String,
             private val textTwo: String
-        ) : TestDataObject() {
+        ) : DataObject() {
             override fun map(mapper: DataToDomainMapper): DomainObject {
                 return mapper.map(textOne, textTwo)
             }
@@ -35,7 +35,7 @@ class AbstractTest {
 
         class Fail(
             private val exception: Exception
-        ) : TestDataObject() {
+        ) : DataObject() {
             override fun map(mapper: DataToDomainMapper): DomainObject {
                 return mapper.map(exception)
             }
@@ -61,7 +61,7 @@ class AbstractTest {
 
     }
 
-    private sealed class DomainObject : Abstract.Object<UiObject, DomainToUiMapper>() {
+    private sealed class DomainObject : Abstract.Object<UiObject, DomainToUiMapper> {
 
         class Success(
             private val textCombined: String
@@ -98,7 +98,7 @@ class AbstractTest {
         }
     }
 
-    private sealed class UiObject : Abstract.Object<Unit, Abstract.Mapper.Empty>() {
+    private sealed class UiObject : Abstract.Object<Unit, Abstract.Mapper.Empty> {
         class Success(
             private val result: String
         ) : UiObject() {

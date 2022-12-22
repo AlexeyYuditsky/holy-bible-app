@@ -1,4 +1,4 @@
-package com.alexeyyuditsky.holybibleapp.data.net
+package com.alexeyyuditsky.holybibleapp.data.network
 
 import com.alexeyyuditsky.holybibleapp.core.Abstract
 import com.alexeyyuditsky.holybibleapp.core.Book

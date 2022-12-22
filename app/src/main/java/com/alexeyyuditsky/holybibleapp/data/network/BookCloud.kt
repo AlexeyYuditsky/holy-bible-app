@@ -1,8 +1,7 @@
-package com.alexeyyuditsky.holybibleapp.data.net
+package com.alexeyyuditsky.holybibleapp.data.network
 
 import com.alexeyyuditsky.holybibleapp.core.Abstract
 import com.alexeyyuditsky.holybibleapp.core.Book
-import com.alexeyyuditsky.holybibleapp.data.BooksData
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -13,7 +12,7 @@ data class BookCloud(
     private val id: Int,
     @SerializedName("name")
     private val name: String
-) : Abstract.Object<Book, BookCloudMapper>() {
+) : Abstract.Object<Book, BookCloudMapper> {
 
     override fun map(mapper: BookCloudMapper): Book {
         return mapper.map(id, name)

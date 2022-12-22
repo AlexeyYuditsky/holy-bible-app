@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import com.alexeyyuditsky.holybibleapp.core.BibleApp
+import com.alexeyyuditsky.holybibleapp.core.Book
 import com.alexeyyuditsky.holybibleapp.presentation.BibleAdapter
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -16,8 +18,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         val adapter = BibleAdapter()
         recyclerView.adapter = adapter
 
-        viewModel.observe(this) { adapter.update(it) }
-        viewModel.fetchBooks()
+        viewModel.observe(this) { books: List<Book> ->
+            adapter.update(books)
+        }
+
         // todo observe fail
     }
+
 }

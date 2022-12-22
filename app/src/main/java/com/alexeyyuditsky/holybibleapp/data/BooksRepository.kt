@@ -4,7 +4,9 @@ import com.alexeyyuditsky.holybibleapp.core.Book
 import com.alexeyyuditsky.holybibleapp.data.cache.BookDb
 import com.alexeyyuditsky.holybibleapp.data.cache.BooksCacheDataSource
 import com.alexeyyuditsky.holybibleapp.data.cache.BooksCacheMapper
-import com.alexeyyuditsky.holybibleapp.data.net.BookCloud
+import com.alexeyyuditsky.holybibleapp.data.network.BookCloud
+import com.alexeyyuditsky.holybibleapp.data.network.BooksCloudDataSource
+import com.alexeyyuditsky.holybibleapp.data.network.BooksCloudMapper
 
 interface BooksRepository {
 
@@ -17,7 +19,7 @@ interface BooksRepository {
         private val booksCacheMapper: BooksCacheMapper
     ) : BooksRepository {
 
-        override suspend fun fetchBooks() = try {
+        override suspend fun fetchBooks(): BooksData = try {
             val booksCacheList: List<BookDb> = cacheDataSource.fetchBookDb()
             if (booksCacheList.isEmpty()) {
                 val bookCloudList: List<BookCloud> = cloudDataSource.fetchBooks()
@@ -31,7 +33,6 @@ interface BooksRepository {
         } catch (e: Exception) {
             BooksData.Fail(e)
         }
-
     }
 
 }

@@ -1,9 +1,7 @@
-package com.alexeyyuditsky.holybibleapp.data
+package com.alexeyyuditsky.holybibleapp.data.network
 
 import com.alexeyyuditsky.holybibleapp.core.Abstract
 import com.alexeyyuditsky.holybibleapp.core.Book
-import com.alexeyyuditsky.holybibleapp.data.net.BookCloud
-import com.alexeyyuditsky.holybibleapp.data.net.BookCloudMapper
 
 interface BooksCloudMapper : Abstract.Mapper {
 

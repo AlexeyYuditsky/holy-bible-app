@@ -6,16 +6,18 @@ import com.alexeyyuditsky.holybibleapp.data.BooksRepository
 
 interface BooksInteractor {
 
-    suspend fun fetchBooks(): BookDomain
+    suspend fun fetchBooks(): BooksDomain
 
     class Base(
         private val booksRepository: BooksRepository,
         private val mapper: BooksDataToDomainMapper
     ) : BooksInteractor {
-        override suspend fun fetchBooks(): BookDomain {
+
+        override suspend fun fetchBooks(): BooksDomain {
             val booksData: BooksData = booksRepository.fetchBooks()
             return booksData.map(mapper)
         }
+
     }
 
 }

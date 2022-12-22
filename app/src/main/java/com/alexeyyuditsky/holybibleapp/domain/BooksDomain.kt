@@ -6,20 +6,19 @@ import com.alexeyyuditsky.holybibleapp.presentation.BooksUi
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
-// todo rename to BooksDomain by lead
-sealed class BookDomain : Abstract.Object<BooksUi, BooksDomainToUiMapper>() {
+sealed class BooksDomain : Abstract.Object<BooksUi, BooksDomainToUiMapper> {
 
-    class Success(
+    data class Success(
         private val books: List<Book>
-    ) : BookDomain() {
+    ) : BooksDomain() {
         override fun map(mapper: BooksDomainToUiMapper): BooksUi {
             return mapper.map(books)
         }
     }
 
-    class Fail(
+    data class Fail(
         private val e: Exception
-    ) : BookDomain() {
+    ) : BooksDomain() {
         override fun map(mapper: BooksDomainToUiMapper): BooksUi {
             val errorType = when (e) {
                 is UnknownHostException -> ErrorType.NO_CONNECTION
