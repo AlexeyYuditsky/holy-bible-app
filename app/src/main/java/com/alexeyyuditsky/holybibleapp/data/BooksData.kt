@@ -7,7 +7,7 @@ import com.alexeyyuditsky.holybibleapp.domain.BooksDomain
 sealed class BooksData : Abstract.Object<BooksDomain, BooksDataToDomainMapper> {
 
     data class Success(
-        private val books: List<Book>
+        val books: List<Book>
     ) : BooksData() {
         override fun map(mapper: BooksDataToDomainMapper): BooksDomain {
             return mapper.map(books)
