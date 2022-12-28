@@ -1,30 +1,31 @@
 package com.alexeyyuditsky.holybibleapp.data.cache
 
-import com.alexeyyuditsky.holybibleapp.core.Book
+import com.alexeyyuditsky.holybibleapp.data.BookData
+import com.alexeyyuditsky.holybibleapp.data.BookDataToDbMapper
 
 interface BooksCacheDataSource {
 
-    fun fetchBookDb(): List<BookDb>
+    fun fetchBooks(): List<BookDb>
 
-    fun saveBooks(books: List<Book>)
+    fun saveBooks(books: List<BookData>)
 
     class Base(
-        private val realmProvider: RealmProvider
+        private val realmProvider: RealmProvider,
+        private val mapper: BookDataToDbMapper
     ) : BooksCacheDataSource {
 
-        override fun fetchBookDb(): List<BookDb> {
+        override fun fetchBooks(): List<BookDb> {
             realmProvider.provide().use { realm ->
-                val booksDb: List<BookDb> = realm.where(BookDb::class.java).findAll() ?: emptyList()
+                val booksDb: List<BookDb> = realm.where(BookDb::class.java).findAll()
                 return realm.copyFromRealm(booksDb)
             }
         }
 
-        override fun saveBooks(books: List<Book>) {
+        override fun saveBooks(books: List<BookData>) {
             realmProvider.provide().use {
                 it.executeTransaction { realm ->
                     books.forEach { book ->
-                        val bookDb: BookDb = realm.createObject(BookDb::class.java, book.id)
-                        bookDb.name = book.name
+                        book.mapToBookDb(mapper, realm)
                     }
                 }
             }

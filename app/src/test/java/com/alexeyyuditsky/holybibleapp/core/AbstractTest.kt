@@ -98,17 +98,17 @@ class AbstractTest {
         }
     }
 
-    private sealed class UiObject : Abstract.Object<Unit, Abstract.Mapper.Empty> {
+    private sealed class UiObject : Abstract.Object<Unit, Abstract.Mapper> {
         class Success(
             private val result: String
         ) : UiObject() {
-            override fun map(mapper: Abstract.Mapper.Empty) {}
+            override fun map(mapper: Abstract.Mapper) {}
         }
 
         class Fail(
             private val e: Exception
         ) : UiObject() {
-            override fun map(mapper: Abstract.Mapper.Empty) {}
+            override fun map(mapper: Abstract.Mapper) {}
         }
     }
 

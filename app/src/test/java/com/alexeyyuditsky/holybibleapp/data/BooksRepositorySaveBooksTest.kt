@@ -1,18 +1,16 @@
 package com.alexeyyuditsky.holybibleapp.data
 
-import com.alexeyyuditsky.holybibleapp.core.Book
-import com.alexeyyuditsky.holybibleapp.data.cache.BookDb
+/*import com.alexeyyuditsky.holybibleapp.data.cache.BookDb
 import com.alexeyyuditsky.holybibleapp.data.cache.BooksCacheDataSource
 import com.alexeyyuditsky.holybibleapp.data.cache.BooksCacheMapper
 import com.alexeyyuditsky.holybibleapp.data.network.BookCloud
 import com.alexeyyuditsky.holybibleapp.data.network.BooksCloudDataSource
-import com.alexeyyuditsky.holybibleapp.data.network.BooksCloudMapper
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
-import org.junit.Test
+import org.junit.Test*/
 
 class BooksRepositorySaveBooksTest : BaseBooksRepositoryTest() {
-
+/*
     @Test
     fun `save books`() = runBlocking {
         val testCloudDataSource = TestBooksCloudDataSource()
@@ -45,13 +43,13 @@ class BooksRepositorySaveBooksTest : BaseBooksRepositoryTest() {
         Assert.assertEquals(expectedCache, actualCache)
     }
 
-    private inner class TestBooksCloudDataSource : BooksCloudDataSource {
+    private class TestBooksCloudDataSource : BooksCloudDataSource {
         override suspend fun fetchBooks(): List<BookCloud> {
             return List(3) { i -> BookCloud(i, "name $i") }
         }
     }
 
-    private inner class TestBooksCacheDataSource : BooksCacheDataSource {
+    private class TestBooksCacheDataSource : BooksCacheDataSource {
 
         private val list = ArrayList<BookDb>()
 
@@ -70,6 +68,6 @@ class BooksRepositorySaveBooksTest : BaseBooksRepositoryTest() {
             }
         }
 
-    }
+    }*/
 
 }

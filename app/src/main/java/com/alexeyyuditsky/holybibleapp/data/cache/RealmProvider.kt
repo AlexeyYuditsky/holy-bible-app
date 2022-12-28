@@ -12,10 +12,4 @@ interface RealmProvider {
         }
     }
 
-    class Test : RealmProvider {
-        override fun provide(): Realm {
-            TODO("Not yet implemented")
-        }
-    }
-
 }

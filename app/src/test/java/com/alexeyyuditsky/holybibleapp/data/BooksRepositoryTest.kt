@@ -1,19 +1,17 @@
 package com.alexeyyuditsky.holybibleapp.data
 
-import com.alexeyyuditsky.holybibleapp.core.Book
-import com.alexeyyuditsky.holybibleapp.data.cache.BookDb
+/*import com.alexeyyuditsky.holybibleapp.data.cache.BookDb
 import com.alexeyyuditsky.holybibleapp.data.cache.BooksCacheDataSource
 import com.alexeyyuditsky.holybibleapp.data.cache.BooksCacheMapper
 import com.alexeyyuditsky.holybibleapp.data.network.BookCloud
 import com.alexeyyuditsky.holybibleapp.data.network.BooksCloudDataSource
-import com.alexeyyuditsky.holybibleapp.data.network.BooksCloudMapper
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.net.UnknownHostException
+import java.net.UnknownHostException*/
 
 class BooksRepositoryTest : BaseBooksRepositoryTest() {
-
+/*
     private val unknownHostException = UnknownHostException()
 
     @Test
@@ -104,7 +102,7 @@ class BooksRepositoryTest : BaseBooksRepositoryTest() {
 
     }
 
-    private inner class TestBooksCacheDataSource(
+    private class TestBooksCacheDataSource(
         private val returnSuccess: Boolean,
     ) : BooksCacheDataSource {
 
@@ -120,6 +118,6 @@ class BooksRepositoryTest : BaseBooksRepositoryTest() {
             // not used here
         }
 
-    }
+    }*/
 
 }

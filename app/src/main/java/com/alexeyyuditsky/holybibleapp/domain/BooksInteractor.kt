@@ -10,12 +10,12 @@ interface BooksInteractor {
 
     class Base(
         private val booksRepository: BooksRepository,
-        private val mapper: BooksDataToDomainMapper
+        private val toDomainMapper: BooksDataToDomainMapper
     ) : BooksInteractor {
 
         override suspend fun fetchBooks(): BooksDomain {
             val booksData: BooksData = booksRepository.fetchBooks()
-            return booksData.map(mapper)
+            return booksData.map(toDomainMapper)
         }
 
     }

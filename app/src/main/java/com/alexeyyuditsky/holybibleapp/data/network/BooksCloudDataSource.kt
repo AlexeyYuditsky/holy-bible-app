@@ -8,11 +8,11 @@ interface BooksCloudDataSource {
     suspend fun fetchBooks(): List<BookCloud>
 
     class Base(
-        private val service: BooksService
+        private val service: BooksService,
+        private val gson: Gson
     ) : BooksCloudDataSource {
 
-        private val gson = Gson()
-        private val type = object : TypeToken<List<BookCloud>>() {}.type
+        private val type = object : TypeToken<List<BookCloud>>() {}.type // todo make a wrapper
 
         override suspend fun fetchBooks(): List<BookCloud> {
             return gson.fromJson(service.fetchBooks().string(), type)
