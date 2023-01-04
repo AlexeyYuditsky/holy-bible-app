@@ -1,23 +1,25 @@
 package com.alexeyyuditsky.holybibleapp.presentation
 
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
-import com.alexeyyuditsky.holybibleapp.databinding.BookItemBinding
-import com.alexeyyuditsky.holybibleapp.databinding.FailFullscreenBinding
-import com.alexeyyuditsky.holybibleapp.databinding.ProgressFullscreenBinding
+import com.alexeyyuditsky.holybibleapp.R
 
-abstract class BibleViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+abstract class BibleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     open fun bind(book: BookUi) = Unit
 
-    class Base(
-        private val binding: BookItemBinding
-    ) : BibleViewHolder(binding) {
+    class FullscreenProgress(view: View) : BibleViewHolder(view)
 
-        override fun bind(book: BookUi) = with(binding) {
+    class Base(view: View) : BibleViewHolder(view) {
+
+        private val nameTextView = view.findViewById<TextView>(R.id.name)
+
+        override fun bind(book: BookUi) {
             val mapper: BookUi.StringMapper = object : BookUi.StringMapper {
                 override fun map(text: String) {
-                    name.text = text
+                    nameTextView.text = text
                 }
             }
             book.map(mapper)
@@ -26,24 +28,25 @@ abstract class BibleViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(b
     }
 
     class Fail(
-        private val binding: FailFullscreenBinding,
+        view: View,
         private val retry: () -> Unit
-    ) : BibleViewHolder(binding) {
+    ) : BibleViewHolder(view) {
 
-        override fun bind(book: BookUi) = with(binding) {
+        private val messageTextView = view.findViewById<TextView>(R.id.messageTextView)
+
+        init {
+            view.findViewById<Button>(R.id.tryAgainButton).setOnClickListener { retry.invoke() }
+        }
+
+        override fun bind(book: BookUi) {
             val mapper: BookUi.StringMapper = object : BookUi.StringMapper {
                 override fun map(text: String) {
                     messageTextView.text = text
                 }
             }
-            tryAgainButton.setOnClickListener { retry.invoke() }
             book.map(mapper)
         }
 
     }
-
-    class FullscreenProgress(
-        binding: ProgressFullscreenBinding
-    ) : BibleViewHolder(binding)
 
 }

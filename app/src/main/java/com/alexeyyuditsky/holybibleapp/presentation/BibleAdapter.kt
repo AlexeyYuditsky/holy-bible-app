@@ -2,11 +2,10 @@ package com.alexeyyuditsky.holybibleapp.presentation
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.alexeyyuditsky.holybibleapp.databinding.BookItemBinding
-import com.alexeyyuditsky.holybibleapp.databinding.FailFullscreenBinding
-import com.alexeyyuditsky.holybibleapp.databinding.ProgressFullscreenBinding
+import com.alexeyyuditsky.holybibleapp.R
 
 class BibleAdapter(private val retry: () -> Unit) : RecyclerView.Adapter<BibleViewHolder>() {
 
@@ -20,17 +19,19 @@ class BibleAdapter(private val retry: () -> Unit) : RecyclerView.Adapter<BibleVi
 
     override fun getItemViewType(position: Int): Int {
         return when (books[position]) {
-            is BookUi.Base -> 0
-            is BookUi.Fail -> 1
-            is BookUi.Progress -> 2
+            is BookUi.Base -> R.layout.book
+            is BookUi.Testament -> R.layout.testament
+            is BookUi.Fail -> R.layout.fail_fullscreen
+            else -> R.layout.progress_fullscreen
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BibleViewHolder {
         return when (viewType) {
-            0 -> BibleViewHolder.Base(createBookItem(parent))
-            1 -> BibleViewHolder.Fail(createFailFullscreen(parent), retry)
-            else -> BibleViewHolder.FullscreenProgress(createProgressFullscreen(parent))
+            R.layout.book -> BibleViewHolder.Base(createLayout(viewType, parent))
+            R.layout.testament -> BibleViewHolder.Base(createLayout(viewType, parent))
+            R.layout.fail_fullscreen -> BibleViewHolder.Fail(createLayout(viewType, parent), retry)
+            else -> BibleViewHolder.FullscreenProgress(createLayout(viewType, parent))
         }
     }
 
@@ -40,16 +41,8 @@ class BibleAdapter(private val retry: () -> Unit) : RecyclerView.Adapter<BibleVi
 
     override fun getItemCount(): Int = books.size
 
-    private fun createBookItem(parent: ViewGroup): BookItemBinding {
-        return BookItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    }
-
-    private fun createFailFullscreen(parent: ViewGroup): FailFullscreenBinding {
-        return FailFullscreenBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    }
-
-    private fun createProgressFullscreen(parent: ViewGroup): ProgressFullscreenBinding {
-        return ProgressFullscreenBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    private fun createLayout(viewType: Int, parent: ViewGroup): View {
+        return LayoutInflater.from(parent.context).inflate(viewType, parent, false)
     }
 
 }

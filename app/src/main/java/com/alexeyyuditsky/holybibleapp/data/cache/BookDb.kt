@@ -9,11 +9,12 @@ import io.realm.annotations.PrimaryKey
 open class BookDb(
     @PrimaryKey
     var id: Int = -1,
-    var name: String = ""
+    var name: String = "",
+    var testament: String = ""
 ) : RealmObject(), Abstract.Object<BookData, ToBookDataMapper> {
 
     override fun map(mapper: ToBookDataMapper): BookData {
-        return mapper.map(id, name)
+        return mapper.map(id, name, testament)
     }
 
 }
