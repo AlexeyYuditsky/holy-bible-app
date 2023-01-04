@@ -12,11 +12,13 @@ data class BookCloud(
     @SerializedName("id")
     private val id: Int,
     @SerializedName("name")
-    private val name: String
+    private val name: String,
+    @SerializedName("testament")
+    private val testament: String
 ) : Abstract.Object<BookData, ToBookDataMapper> {
 
     override fun map(mapper: ToBookDataMapper): BookData {
-        return mapper.map(id, name)
+        return mapper.map(id, name, testament)
     }
 
 }

@@ -13,14 +13,14 @@ interface BooksCommunication : Abstract.Mapper {
 
     class Base : BooksCommunication {
 
-        private val listLiveData = MutableLiveData<List<BookUi>>()
+        private val booksLiveData = MutableLiveData<List<BookUi>>()
 
         override fun map(books: List<BookUi>) {
-            listLiveData.value = books
+            booksLiveData.value = books
         }
 
         override fun observe(owner: LifecycleOwner, observer: Observer<List<BookUi>>) {
-            listLiveData.observe(owner, observer)
+            booksLiveData.observe(owner, observer)
         }
 
     }
