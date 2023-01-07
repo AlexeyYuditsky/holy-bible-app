@@ -1,7 +1,9 @@
 package com.alexeyyuditsky.holybibleapp.presentation
 
 import android.os.Bundle
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.alexeyyuditsky.holybibleapp.core.BibleApp
 import com.alexeyyuditsky.holybibleapp.databinding.ActivityMainBinding
 
@@ -16,10 +18,9 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = BibleAdapter { viewModel.fetchBooks() }
         binding.recyclerView.adapter = adapter
+        binding.recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
 
-        viewModel.observe(this) { books: List<BookUi> ->
-            adapter.update(books)
-        }
+        viewModel.observe(this) { books: List<BookUi> -> adapter.update(books) }
     }
 
 }

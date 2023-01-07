@@ -2,25 +2,31 @@ package com.alexeyyuditsky.holybibleapp.data
 
 import com.alexeyyuditsky.holybibleapp.core.Abstract
 import com.alexeyyuditsky.holybibleapp.data.cache.BookDb
+import com.alexeyyuditsky.holybibleapp.data.cache.DbWrapper
 import com.alexeyyuditsky.holybibleapp.domain.BookDomain
-import io.realm.Realm
 
-class BookData(
+data class BookData(
     private val id: Int,
     private val name: String,
-    private val testament: String
+    private val testament: String,
 ) : Abstract.Object<BookDomain, BookDataToDomainMapper>, ToBookDb<BookDb, BookDataToDbMapper> {
 
     override fun map(mapper: BookDataToDomainMapper): BookDomain {
         return mapper.map(id, name)
     }
 
-    override fun mapToBookDb(mapper: BookDataToDbMapper, realm: Realm): BookDb {
-        return mapper.mapToBookDb(id, name, testament, realm)
+    override fun mapToBookDb(mapper: BookDataToDbMapper, db: DbWrapper): BookDb {
+        return mapper.mapToBookDb(id, name, testament, db)
     }
 
-    fun compare(testamentTemp: TestamentTemp): Boolean = testamentTemp.matches(testament)
-    fun saveTestament(testamentTemp: TestamentTemp) = testamentTemp.save(testament)
+    fun matches(testamentTemp: TestamentTemp): Boolean {
+        return testamentTemp.matches(testament)
+    }
+
+    fun saveTestament(testamentTemp: TestamentTemp) {
+        testamentTemp.save(testament)
+    }
+
 }
 
 interface TestamentTemp {
@@ -41,5 +47,5 @@ interface TestamentTemp {
 
 // todo make it better later
 interface ToBookDb<T, M : Abstract.Mapper> {
-    fun mapToBookDb(mapper: M, realm: Realm): T
+    fun mapToBookDb(mapper: M, db: DbWrapper): T
 }

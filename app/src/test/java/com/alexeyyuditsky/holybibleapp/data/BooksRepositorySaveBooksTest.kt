@@ -1,16 +1,16 @@
 package com.alexeyyuditsky.holybibleapp.data
 
-/*import com.alexeyyuditsky.holybibleapp.data.cache.BookDb
+import com.alexeyyuditsky.holybibleapp.data.cache.BookDb
 import com.alexeyyuditsky.holybibleapp.data.cache.BooksCacheDataSource
-import com.alexeyyuditsky.holybibleapp.data.cache.BooksCacheMapper
+import com.alexeyyuditsky.holybibleapp.data.cache.DbWrapper
 import com.alexeyyuditsky.holybibleapp.data.network.BookCloud
 import com.alexeyyuditsky.holybibleapp.data.network.BooksCloudDataSource
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
-import org.junit.Test*/
+import org.junit.Test
 
 class BooksRepositorySaveBooksTest : BaseBooksRepositoryTest() {
-/*
+
     @Test
     fun `save books`() = runBlocking {
         val testCloudDataSource = TestBooksCloudDataSource()
@@ -18,24 +18,21 @@ class BooksRepositorySaveBooksTest : BaseBooksRepositoryTest() {
         val repository = BooksRepository.Base(
             testCloudDataSource,
             testCacheDataSource,
-            BooksCloudMapper.Base(TestBookCloudMapper()),
-            BooksCacheMapper.Base(TestBookCacheMapper())
+            ToBooksDataMapper.Base(TestToBookMapper())
         )
 
         val actualCloud: BooksData = repository.fetchBooks()
+        val actualCache: BooksData = repository.fetchBooks()
         val expectedCloud: BooksData = BooksData.Success(
             listOf(
-                Book(0, "name 0"),
-                Book(1, "name 1"),
-                Book(2, "name 2")
+                BookData(0, "name0", "ot"),
+                BookData(1, "name1", "nt")
             )
         )
-        val actualCache: BooksData = repository.fetchBooks()
         val expectedCache: BooksData = BooksData.Success(
             listOf(
-                Book(0, "name 0 db"),
-                Book(1, "name 1 db"),
-                Book(2, "name 2 db")
+                BookData(0, "name0 db", "ot db"),
+                BookData(1, "name1 db", "nt db")
             )
         )
 
@@ -45,29 +42,31 @@ class BooksRepositorySaveBooksTest : BaseBooksRepositoryTest() {
 
     private class TestBooksCloudDataSource : BooksCloudDataSource {
         override suspend fun fetchBooks(): List<BookCloud> {
-            return List(3) { i -> BookCloud(i, "name $i") }
+            return listOf(
+                BookCloud(0, "name0", "ot"),
+                BookCloud(1, "name1", "nt")
+            )
         }
     }
 
     private class TestBooksCacheDataSource : BooksCacheDataSource {
-
         private val list = ArrayList<BookDb>()
-
-        override fun fetchBookDb(): List<BookDb> {
-            return list
-        }
-
-        override fun saveBooks(books: List<Book>) {
+        override fun fetchBooks() = list
+        override fun saveBooks(books: List<BookData>) {
             books.map { book ->
-                list.add(
-                    BookDb().apply {
-                        this.id = book.id
-                        this.name = "${book.name} db"
+                list.add(book.mapToBookDb(object : BookDataToDbMapper {
+                    override fun mapToBookDb(id: Int, name: String, testament: String, db: DbWrapper) = BookDb(
+                        id = id,
+                        name = "$name db",
+                        testament = "$testament db"
+                    )
+                }, object : DbWrapper {
+                    override fun createObject(id: Int) = BookDb().apply {
+                        this.id = id
                     }
-                )
+                }))
             }
         }
-
-    }*/
+    }
 
 }

@@ -15,7 +15,7 @@ class BaseBooksDataToDomainMapper(
         val data = ArrayList<BookDomain>()
         val temp = TestamentTemp.Base()
         books.forEach { bookData ->
-            if (!bookData.compare(temp)) {
+            if (!bookData.matches(temp)) {
                 if (temp.isEmpty()) {
                     val bookDomainTestament = BookDomain.Testament(TestamentType.OLD)
                     data.add(bookDomainTestament)

@@ -11,6 +11,8 @@ class AbstractTest {
         val dataObject = DataObject.Success("a", "b")
         val domainObject = dataObject.map(DataToDomainMapper.Base())
         val uiObject = domainObject.map(DomainToUiMapper.Base())
+
+        assertTrue(domainObject is DomainObject.Success)
         assertTrue(uiObject is UiObject.Success)
     }
 
@@ -19,14 +21,15 @@ class AbstractTest {
         val dataObject = DataObject.Fail(IOException())
         val domainObject = dataObject.map(DataToDomainMapper.Base())
         val uiObject = domainObject.map(DomainToUiMapper.Base())
+
+        assertTrue(domainObject is DomainObject.Fail)
         assertTrue(uiObject is UiObject.Fail)
     }
 
     private sealed class DataObject : Abstract.Object<DomainObject, DataToDomainMapper> {
-
         class Success(
             private val textOne: String,
-            private val textTwo: String
+            private val textTwo: String,
         ) : DataObject() {
             override fun map(mapper: DataToDomainMapper): DomainObject {
                 return mapper.map(textOne, textTwo)
@@ -34,21 +37,17 @@ class AbstractTest {
         }
 
         class Fail(
-            private val exception: Exception
+            private val exception: Exception,
         ) : DataObject() {
             override fun map(mapper: DataToDomainMapper): DomainObject {
                 return mapper.map(exception)
             }
         }
-
     }
 
     private interface DataToDomainMapper : Abstract.Mapper {
-
         fun map(textOne: String, textTwo: String): DomainObject
-
         fun map(e: Exception): DomainObject
-
         class Base : DataToDomainMapper {
             override fun map(textOne: String, textTwo: String): DomainObject {
                 return DomainObject.Success("$textOne $textTwo")
@@ -58,13 +57,11 @@ class AbstractTest {
                 return DomainObject.Fail(e)
             }
         }
-
     }
 
     private sealed class DomainObject : Abstract.Object<UiObject, DomainToUiMapper> {
-
         class Success(
-            private val textCombined: String
+            private val textCombined: String,
         ) : DomainObject() {
             override fun map(mapper: DomainToUiMapper): UiObject {
                 return mapper.map(textCombined)
@@ -72,21 +69,17 @@ class AbstractTest {
         }
 
         class Fail(
-            private val e: Exception
+            private val e: Exception,
         ) : DomainObject() {
             override fun map(mapper: DomainToUiMapper): UiObject {
                 return mapper.map(e)
             }
         }
-
     }
 
     private interface DomainToUiMapper : Abstract.Mapper {
-
         fun map(result: String): UiObject
-
         fun map(e: Exception): UiObject
-
         class Base : DomainToUiMapper {
             override fun map(result: String): UiObject {
                 return UiObject.Success(result)
@@ -100,13 +93,13 @@ class AbstractTest {
 
     private sealed class UiObject : Abstract.Object<Unit, Abstract.Mapper> {
         class Success(
-            private val result: String
+            private val result: String,
         ) : UiObject() {
             override fun map(mapper: Abstract.Mapper) {}
         }
 
         class Fail(
-            private val e: Exception
+            private val e: Exception,
         ) : UiObject() {
             override fun map(mapper: Abstract.Mapper) {}
         }

@@ -2,62 +2,30 @@ package com.alexeyyuditsky.holybibleapp.domain
 
 import com.alexeyyuditsky.holybibleapp.data.BookData
 import com.alexeyyuditsky.holybibleapp.data.BookDataToDomainMapper
-import com.alexeyyuditsky.holybibleapp.data.BooksDataToDomainMapper
-import com.alexeyyuditsky.holybibleapp.data.TestamentTemp
 import org.junit.Assert
 import org.junit.Test
+import retrofit2.HttpException
+import retrofit2.Response
+import java.net.UnknownHostException
 
 /**
- * Test for [BooksDataToDomainMapper]
+ * Test for [BaseBooksDataToDomainMapper]
  */
 class BaseBooksDataToDomainMapperTest {
 
+    private val baseBookDataToDomainMapper = object : BookDataToDomainMapper {
+        override fun map(id: Int, name: String) = BookDomain.Base(id, name)
+    }
+
     @Test
-    fun map() {
-        val baseBookDataToDomainMapper = object : BookDataToDomainMapper {
-            override fun map(id: Int, name: String): BookDomain {
-                return BookDomain.Base(id, name)
-            }
-        }
-        val baseBooksDataToDomainMapper = object : BooksDataToDomainMapper {
-            override fun map(books: List<BookData>): BooksDomain {
-                val data = ArrayList<BookDomain>()
-                val temp = object : TestamentTemp {
-                    private var temp = ""
-                    override fun save(testament: String) {
-                        temp = testament
-                    }
-
-                    override fun matches(testament: String): Boolean = temp == testament
-                    override fun isEmpty(): Boolean = temp.isEmpty()
-                }
-                books.forEach { bookData ->
-                    if (!bookData.compare(temp)) {
-                        if (temp.isEmpty()) {
-                            val bookDomainTestament = BookDomain.Testament(TestamentType.OLD)
-                            data.add(bookDomainTestament)
-                        } else {
-                            val bookDomainTestament = BookDomain.Testament(TestamentType.NEW)
-                            data.add(bookDomainTestament)
-                        }
-                        bookData.saveTestament(temp)
-                    }
-                    val bookDomain = bookData.map(baseBookDataToDomainMapper)
-                    data.add(bookDomain)
-                }
-                return BooksDomain.Success(data)
-            }
-
-            override fun map(exception: Exception): BooksDomain {
-                throw IllegalStateException()
-            }
-        }
+    fun `fun map which convert BooksData(Success) to BooksDomain(Success)`() {
+        val mapper = BaseBooksDataToDomainMapper(baseBookDataToDomainMapper)
         val booksData = listOf(
             BookData(1, "Genesis", "OT"),
             BookData(66, "Revelation", "NT")
         )
 
-        val actual: BooksDomain = baseBooksDataToDomainMapper.map(booksData)
+        val actual: BooksDomain = mapper.map(booksData)
         val expected: BooksDomain = BooksDomain.Success(
             listOf(
                 BookDomain.Testament(TestamentType.OLD),
@@ -68,6 +36,22 @@ class BaseBooksDataToDomainMapperTest {
         )
 
         Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `fun map which convert BooksData(Fail) to BooksDomain(Fail)`() {
+        val mapper = BaseBooksDataToDomainMapper(baseBookDataToDomainMapper)
+
+        val actual1: BooksDomain = mapper.map(UnknownHostException())
+        val actual2: BooksDomain = mapper.map(HttpException(Response.success(null)))
+        val actual3: BooksDomain = mapper.map(IllegalStateException())
+        val expected1: BooksDomain = BooksDomain.Fail(ErrorType.NO_CONNECTION)
+        val expected2: BooksDomain = BooksDomain.Fail(ErrorType.SERVICE_UNAVAILABLE)
+        val expected3: BooksDomain = BooksDomain.Fail(ErrorType.GENERIC_ERROR)
+
+        Assert.assertEquals(expected1, actual1)
+        Assert.assertEquals(expected2, actual2)
+        Assert.assertEquals(expected3, actual3)
     }
 
 }

@@ -12,10 +12,10 @@ class BaseBooksDomainToUiMapper(
 ) : BooksDomainToUiMapper {
 
     override fun map(books: List<BookDomain>): BooksUi {
-        val booksUi = books.map { bookDomain: BookDomain ->
+        val booksUi: List<BookUi> = books.map { bookDomain: BookDomain ->
             bookDomain.map(toUiMapper)
         }
-        return BooksUi.Success(booksUi)
+        return BooksUi.Base(booksUi)
     }
 
     override fun map(errorType: ErrorType): BooksUi {
@@ -25,7 +25,7 @@ class BaseBooksDomainToUiMapper(
             else -> R.string.something_went_wrong
         }
         val message = resourceProvider.getString(messageId)
-        return BooksUi.Fail(message)
+        return BooksUi.Base(listOf(BookUi.Fail(message)))
     }
 
 }

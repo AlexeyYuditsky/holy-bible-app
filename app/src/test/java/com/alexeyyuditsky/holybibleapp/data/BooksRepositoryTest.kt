@@ -1,17 +1,16 @@
 package com.alexeyyuditsky.holybibleapp.data
 
-/*import com.alexeyyuditsky.holybibleapp.data.cache.BookDb
+import com.alexeyyuditsky.holybibleapp.data.cache.BookDb
 import com.alexeyyuditsky.holybibleapp.data.cache.BooksCacheDataSource
-import com.alexeyyuditsky.holybibleapp.data.cache.BooksCacheMapper
 import com.alexeyyuditsky.holybibleapp.data.network.BookCloud
 import com.alexeyyuditsky.holybibleapp.data.network.BooksCloudDataSource
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.net.UnknownHostException*/
+import java.net.UnknownHostException
 
 class BooksRepositoryTest : BaseBooksRepositoryTest() {
-/*
+
     private val unknownHostException = UnknownHostException()
 
     @Test
@@ -21,8 +20,7 @@ class BooksRepositoryTest : BaseBooksRepositoryTest() {
         val repository = BooksRepository.Base(
             testCloudDataSource,
             testCacheDataSource,
-            BooksCloudMapper.Base(TestBookCloudMapper()),
-            BooksCacheMapper.Base(TestBookCacheMapper())
+            ToBooksDataMapper.Base(TestToBookMapper())
         )
 
         val actual: BooksData = repository.fetchBooks()
@@ -38,13 +36,13 @@ class BooksRepositoryTest : BaseBooksRepositoryTest() {
         val repository = BooksRepository.Base(
             testCloudDataSource,
             testCacheDataSource,
-            BooksCloudMapper.Base(TestBookCloudMapper()),
-            BooksCacheMapper.Base(TestBookCacheMapper())
+            ToBooksDataMapper.Base(TestToBookMapper())
         )
 
         val actual: BooksData = repository.fetchBooks()
         val expected: BooksData = BooksData.Success(
-            List(3) { i -> Book(i, "name $i") }
+            List(3) { i -> BookData(id = i, "name$i", "ot") }
+
         )
 
         assertEquals(actual, expected)
@@ -57,13 +55,12 @@ class BooksRepositoryTest : BaseBooksRepositoryTest() {
         val repository = BooksRepository.Base(
             testCloudDataSource,
             testCacheDataSource,
-            BooksCloudMapper.Base(TestBookCloudMapper()),
-            BooksCacheMapper.Base(TestBookCacheMapper())
+            ToBooksDataMapper.Base(TestToBookMapper())
         )
 
         val actual: BooksData = repository.fetchBooks()
         val expected: BooksData = BooksData.Success(
-            List(3) { i -> Book(id = i + 10, "name${i + 10}") }
+            List(3) { i -> BookData(id = i + 10, "name${i + 10}", "nt") }
         )
 
         assertEquals(actual, expected)
@@ -76,25 +73,24 @@ class BooksRepositoryTest : BaseBooksRepositoryTest() {
         val repository = BooksRepository.Base(
             testCloudDataSource,
             testCacheDataSource,
-            BooksCloudMapper.Base(TestBookCloudMapper()),
-            BooksCacheMapper.Base(TestBookCacheMapper())
+            ToBooksDataMapper.Base(TestToBookMapper())
         )
 
         val actual: BooksData = repository.fetchBooks()
         val expected: BooksData = BooksData.Success(
-            List(3) { i -> Book(id = i + 10, "name${i + 10}") }
+            List(3) { i -> BookData(id = i + 10, "name${i + 10}", "nt") }
         )
 
         assertEquals(actual, expected)
     }
 
     private inner class TestBooksCloudDataSource(
-        private val returnSuccess: Boolean
+        private val returnSuccess: Boolean,
     ) : BooksCloudDataSource {
 
         override suspend fun fetchBooks(): List<BookCloud> {
             if (returnSuccess) {
-                return List(3) { i -> BookCloud(i, "name $i") }
+                return List(3) { i -> BookCloud(i, "name$i", "ot") }
             } else {
                 throw unknownHostException
             }
@@ -106,18 +102,18 @@ class BooksRepositoryTest : BaseBooksRepositoryTest() {
         private val returnSuccess: Boolean,
     ) : BooksCacheDataSource {
 
-        override fun fetchBookDb(): List<BookDb> {
+        override fun fetchBooks(): List<BookDb> {
             return if (returnSuccess) {
-                List(3) { i -> BookDb().apply { id = i + 10; name = "name${i + 10}" } }
+                List(3) { i -> BookDb(i + 10, "name${i + 10}", "nt") }
             } else {
                 emptyList()
             }
         }
 
-        override fun saveBooks(books: List<Book>) {
+        override fun saveBooks(books: List<BookData>) {
             // not used here
         }
 
-    }*/
+    }
 
 }
