@@ -4,23 +4,33 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.alexeyyuditsky.holybibleapp.R
 
-class BibleAdapter(private val retry: () -> Unit) : RecyclerView.Adapter<BibleViewHolder>() {
+typealias RetryListener = () -> Unit
+typealias CollapseListener = (Int) -> Unit
 
-    private var books: List<BookUi> = emptyList()
+class BibleAdapter(
+    private val retry: RetryListener,
+    private val collapse: CollapseListener,
+) : RecyclerView.Adapter<BibleViewHolder>() {
+
+    private val books = ArrayList<BookUi>()
 
     @SuppressLint("NotifyDataSetChanged")
     fun update(newBooks: List<BookUi>) {
-        this.books = newBooks
-        notifyDataSetChanged()
+          val diffUtilCallback = DiffUtilCallback(books, newBooks)
+          val result = DiffUtil.calculateDiff(diffUtilCallback)
+          books.clear()
+          books.addAll(newBooks)
+          result.dispatchUpdatesTo(this)
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (books[position]) {
-            is BookUi.Base -> R.layout.book
             is BookUi.Testament -> R.layout.testament
+            is BookUi.Base -> R.layout.book
             is BookUi.Fail -> R.layout.fail_fullscreen
             else -> R.layout.progress_fullscreen
         }
@@ -28,8 +38,8 @@ class BibleAdapter(private val retry: () -> Unit) : RecyclerView.Adapter<BibleVi
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BibleViewHolder {
         return when (viewType) {
+            R.layout.testament -> BibleViewHolder.Testament(createLayout(viewType, parent), collapse)
             R.layout.book -> BibleViewHolder.Base(createLayout(viewType, parent))
-            R.layout.testament -> BibleViewHolder.Base(createLayout(viewType, parent))
             R.layout.fail_fullscreen -> BibleViewHolder.Fail(createLayout(viewType, parent), retry)
             else -> BibleViewHolder.FullscreenProgress(createLayout(viewType, parent))
         }
